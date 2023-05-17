@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Counter.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,13 +7,14 @@ import {
   addAmount,
   addIfOdd,
   addAsync,
-  formInput,
 } from '../redux/feature/counter.feature';
 
 export function Counter() {
+  const [incrementAmount, setIncrementAmount] = useState(2);
+  const addValue = Number(incrementAmount) || 0;
   //get data from redux store
 
-  const count = useSelector((state) => state.counter);
+  const count = useSelector((state) => state.counter.result);
   // console.log(count);
 
   const dispatch = useDispatch();
@@ -28,23 +29,19 @@ export function Counter() {
   };
 
   const counterAddAmount = () => {
-    dispatch(addAmount());
+    dispatch(addAmount(addValue));
   };
 
   //addIfOdd function
   const counterAddIfOdd = () => {
-    dispatch(addIfOdd());
+    dispatch(addIfOdd(addValue));
   };
   //addAsync function
   const counterAddAsync = () => {
-    dispatch(addAsync());
+    dispatch(addAsync(addValue));
   };
   //form input function
-  const counterFormInput = (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    dispatch(formInput(value));
-  };
+
   //   const [result, setresult] = useState(0);
   //   //addAmount function
   //   const addAmount = () => {
@@ -76,25 +73,26 @@ export function Counter() {
   //       setresult(result + incrementAmount);
   //     }, 1000);
   //   };
-  const { result, value } = count;
+
   return (
     <div>
       <div className={styles.row}>
         <button onClick={counterDecrement} className={styles.button}>
           -
         </button>
-        <span className={styles.value}>{result}</span>
+        <span className={styles.value}>{count}</span>
         <button onClick={counterIncrement} className={styles.button}>
           +
         </button>
       </div>
       <div className={styles.row}>
         <input
-          onChange={counterFormInput}
+          onChange={(e) => setIncrementAmount(e.target.value)}
           className={styles.textbox}
-          type="number"
-          value={value}
+          type="text"
+          value={incrementAmount}
         />
+
         <button onClick={counterAddAmount} className={styles.button}>
           Add Amount
         </button>
